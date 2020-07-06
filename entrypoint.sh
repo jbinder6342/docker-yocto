@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # -*- mode: shell-script; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 #
 # Copyright (C) 2019 coldnew
@@ -46,8 +46,12 @@ echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 chown -R ${USER_UID}:${USER_GID} /home/${USER} > /dev/null 2>&1
 
+echo "Switching to ${USER}"
+
 # switch to current user
-su "${USER}"
+su - "${USER}"
+
+echo "Starting /bin/bash "
 
 # enter to shell
 exec /bin/bash

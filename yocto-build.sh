@@ -98,7 +98,7 @@ FUNCDOC
         source "${HOME}/.yocto-build.sh"
 
         if [ "$IMAGE" != "coldnew/yocto-build" ]; then
-            INFO "CONTAINER: $CONTAINER"
+            INFO "IMAGE: $IMAGE"
         fi
 
         if [ "$CONTAINER" != "yocto-build" ]; then
@@ -178,6 +178,8 @@ if [ -z "$1" ] ;then
     exit 1
 fi
 
+read_config
+
 # parsing arguments
 while true
 do
@@ -230,13 +232,15 @@ do
         # Try to start an existing/stopped container with thie give name $CONTAINER
         # otherwise, run a new one.
         YOCTODIR=$(readlink -m "$2")
+        INFO "YOCTODIR: $YOCTODIR"
+        
         if docker inspect $CONTAINER > /dev/null 2>&1 ; then
             INFO "Reattaching to running container $CONTAINER"
             docker start -i ${CONTAINER}
         else
             INFO "Creating container $CONTAINER"
             USER=$(whoami)
-            read_config
+            # read_config
             docker run -it \
                    --volume="$YOCTODIR:/yocto" \
                    --volume="${HOME}/.ssh:/home/${USER}/.ssh" \
